@@ -18,7 +18,7 @@ class salamoonder:
                 Possible keyword arguments:
                 - For "KasadaCaptchaSolver": 
                     pjs_url (str): The URL of the page JavaScript file.
-                    cd_only (bool): Whether to use Content Distribution Network (CDN) only.
+                    cd_only (bool): Whether to use cdOnly.
                 - For "Twitch_CheckIntegrity": 
                     token (str): The Twitch token for integrity checking.
                 - For "Twitch_PublicIntegrity": 
