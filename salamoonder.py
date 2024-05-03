@@ -98,8 +98,6 @@ class salamoonder:
             print("Failed to get task result:", e)
             return None
 
-salamoonder_api = salamoonder(api_key="YOUR_API_KEY_HERE")
-
 # All tasks with all parameters.
 # salamoonder_api.createTask(task_type="KasadaCaptchaSolver", pjs_url="https://example.com/xxxx/p.js", cd_only="false")
 # salamoonder_api.createTask(task_type="Twitch_Scraper")
@@ -107,13 +105,3 @@ salamoonder_api = salamoonder(api_key="YOUR_API_KEY_HERE")
 # salamoonder_api.createTask(task_type="Twitch_PublicIntegrity", access_token="xxx", proxy="ip:port", device_id="Optional", client_id="Optional")
 # salamoonder_api.createTask(task_type="Twitch_LocalIntegrity", proxy="ip:port", device_id="Optional", client_id="Optional")
 # salamoonder_api.createTask(task_type="Twitch_RegisterAccount", email="example@gmail.com")
-
-task_id = salamoonder_api.createTask(
-    task_type="KasadaCaptchaSolver", 
-    pjs_url="https://k.twitchcdn.net/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/p.js",
-    cd_only="false"
-)
-
-if task_id:
-    solution = salamoonder_api.getTaskResult(task_id)
-    print("Solution:", solution)
