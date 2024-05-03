@@ -4,7 +4,7 @@ This is a Python wrapper for interacting with the Salamoonder API. It simplifies
 
 ## Installation
 
-To use this wrapper in your project, simply copy the `sdk.py` file into your project directory.
+To use this wrapper in your project, simply copy the `salamoonder.py` file into your project directory.
 
 ## Usage
 
