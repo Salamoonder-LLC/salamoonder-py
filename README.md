@@ -53,7 +53,7 @@ task_id = salamoonder_api.createTask(
 
 # Example: Retrieving task result
 ```python
-solution = salamoonder_api.getTaskResult(task_id)
+solution = salamoonder_api.getTaskResult("YOUR_API_KEY_HERE", task_id)
 print("Solution:", solution)
 ```
 ## Support
