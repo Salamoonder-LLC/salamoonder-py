@@ -69,7 +69,7 @@ class salamoonder:
             print("Failed to create task:", e , createTask_response.text)
             return None
     
-    def getTaskResult(self, task_id):
+    def getTaskResult(self, api_key, task_id):
         """Retrieves the result of a previously created task.
 
         Args:
@@ -80,7 +80,7 @@ class salamoonder:
         """
         try:
             while True:
-                getTaskResult_response = self.session.post(self.get_url, json={"taskId": task_id}); getTaskResult_response.raise_for_status()
+                getTaskResult_response = self.session.post(self.get_url, json={"api_key": api_key, "taskId": task_id}); getTaskResult_response.raise_for_status()
 
                 result_json = getTaskResult_response.json()
 
