@@ -74,6 +74,7 @@ class salamoonder:
 
         Args:
             task_id (str): The ID of the task whose result is to be retrieved.
+            api_key (str): Your Salamoonder API key.
 
         Returns:
             dict or None: A dictionary containing the task result if available, otherwise None.
