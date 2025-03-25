@@ -24,14 +24,6 @@ task_id = salamoonder_api.createTask(
 )
 ```
 
-# Example: Creating a Twitch_CheckIntegrity task
-```python
-task_id = salamoonder_api.createTask(
-    task_type="Twitch_CheckIntegrity", 
-    token="v4.public_token"
-)
-```
-
 # Example: Creating a Twitch_PublicIntegrity task
 ```python
 task_id = salamoonder_api.createTask(
@@ -40,14 +32,6 @@ task_id = salamoonder_api.createTask(
     proxy="ip:port", 
     device_id="Optional", 
     client_id="Optional"
-)
-```
-
-# Example: Creating a Twitch_RegisterAccount task
-```python
-task_id = salamoonder_api.createTask(
-    task_type="Twitch_RegisterAccount", 
-    email="example@gmail.com"
 )
 ```
 
