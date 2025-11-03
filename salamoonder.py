@@ -39,7 +39,16 @@ class salamoonder:
                 task_payload["task"]["proxy"] = kwargs.get("proxy")
                 if "device_id" in kwargs: task_payload["task"]["device_id"] = kwargs.get("device_id")
                 if "client_id" in kwargs: task_payload["task"]["client_id"] = kwargs.get("client_id")
-            
+
+            elif task_type == "IncapsulaReese84":
+                task_payload["task"]["type"] = "IncapsulaReese84"
+                task_payload["task"]["website"] = kwargs.get("website")
+                task_payload["task"]["submit_payload"] = kwargs.get("submit_payload")
+
+            elif task_type == "IncapsulaUTMVCSolver":
+                task_payload["task"]["type"] = "IncapsulaUTMVCSolver"
+                task_payload["task"]["website"] = kwargs.get("website")
+
             createTask_response = self.session.post(self.create_url, json=task_payload); createTask_response.raise_for_status()
 
             taskId = createTask_response.json().get("taskId")
@@ -81,5 +90,9 @@ class salamoonder:
 
 # All tasks with all parameters.
 # salamoonder_api.createTask(task_type="KasadaCaptchaSolver", pjs_url="https://example.com/xxxx/p.js", cd_only="false")
+            
 # salamoonder_api.createTask(task_type="Twitch_Scraper")
 # salamoonder_api.createTask(task_type="Twitch_PublicIntegrity", access_token="xxx", proxy="ip:port", device_id="Optional", client_id="Optional")
+            
+# salamoonder_api.createTask(task_type="IncapsulaReese84Solver", website="xxx", submit_payload=True)
+# salamoonder_api.createTask(task_type="IncapsulaUTMVCSolver", website="xxx")
