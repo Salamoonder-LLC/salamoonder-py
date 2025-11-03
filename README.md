@@ -29,7 +29,6 @@ task_id = salamoonder_api.createTask(
 task_id = salamoonder_api.createTask(
     task_type="Twitch_PublicIntegrity", 
     access_token="YOUR_ACCESS_TOKEN", 
-    proxy="ip:port", 
     device_id="Optional", 
     client_id="Optional"
 )
