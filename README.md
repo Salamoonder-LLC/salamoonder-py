@@ -40,7 +40,7 @@ task_id = salamoonder_api.createTask(
 task_id = salamoonder_api.createTask(
     task_type="IncapsulaReese84Solver", 
     website="https://www.pokemoncenter.com/", 
-    submit_payload=True, 
+    submit_payload=True
 )
 ```
 
@@ -48,7 +48,7 @@ task_id = salamoonder_api.createTask(
 ```python
 task_id = salamoonder_api.createTask(
     task_type="IncapsulaUTMVCSolver", 
-    website="https://group.accor.com/", 
+    website="https://group.accor.com/"
 )
 ```
 
