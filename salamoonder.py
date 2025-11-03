@@ -26,13 +26,6 @@ class salamoonder:
                     proxy (str): The proxy IP address and port.
                     device_id (str, optional): The device ID (optional).
                     client_id (str, optional): The client ID (optional).
-                - For "Twitch_LocalIntegrity":
-                    proxy (str): The proxy IP address and port.
-                    device_id (str, optional): The device ID (optional).
-                    client_id (str, optional): The client ID (optional).
-                - For "Twitch_RegisterAccount":
-                    email (str): The email address for registering a Twitch account.
-
         Returns:
             str or None: The task ID if the task is successfully created, otherwise None.
         """
@@ -49,17 +42,9 @@ class salamoonder:
             elif task_type == "Twitch_PublicIntegrity":
                 task_payload["task"]["access_token"] = kwargs.get("access_token")
                 task_payload["task"]["proxy"] = kwargs.get("proxy")
-                if "device_id" in kwargs: task_payload["task"]["deviceId"] = kwargs.get("device_id")
-                if "client_id" in kwargs: task_payload["task"]["clientId"] = kwargs.get("client_id")
-
-            elif task_type == "Twitch_LocalIntegrity":
-                task_payload["task"]["proxy"] = kwargs.get("proxy")
-                if "device_id" in kwargs: task_payload["task"]["deviceId"] = kwargs.get("device_id")
-                if "client_id" in kwargs: task_payload["task"]["clientId"] = kwargs.get("client_id")
+                if "device_id" in kwargs: task_payload["task"]["device_id"] = kwargs.get("device_id")
+                if "client_id" in kwargs: task_payload["task"]["client_id"] = kwargs.get("client_id")
             
-            elif task_type == "Twitch_RegisterAccount":
-                task_payload["task"]["email"] = kwargs.get("email")
-
             createTask_response = self.session.post(self.create_url, json=task_payload); createTask_response.raise_for_status()
 
             taskId = createTask_response.json().get("taskId")
@@ -102,7 +87,4 @@ class salamoonder:
 # All tasks with all parameters.
 # salamoonder_api.createTask(task_type="KasadaCaptchaSolver", pjs_url="https://example.com/xxxx/p.js", cd_only="false")
 # salamoonder_api.createTask(task_type="Twitch_Scraper")
-# salamoonder_api.createTask(task_type="Twitch_CheckIntegrity", token="v4.public_token")
 # salamoonder_api.createTask(task_type="Twitch_PublicIntegrity", access_token="xxx", proxy="ip:port", device_id="Optional", client_id="Optional")
-# salamoonder_api.createTask(task_type="Twitch_LocalIntegrity", proxy="ip:port", device_id="Optional", client_id="Optional")
-# salamoonder_api.createTask(task_type="Twitch_RegisterAccount", email="example@gmail.com")
