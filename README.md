@@ -35,6 +35,23 @@ task_id = salamoonder_api.createTask(
 )
 ```
 
+# Example: Creating a IncapsulaReese84Solver task
+```python
+task_id = salamoonder_api.createTask(
+    task_type="IncapsulaReese84Solver", 
+    website="https://www.pokemoncenter.com/", 
+    submit_payload=True, 
+)
+```
+
+# Example: Creating a IncapsulaUTMVCSolver task
+```python
+task_id = salamoonder_api.createTask(
+    task_type="IncapsulaUTMVCSolver", 
+    website="https://group.accor.com/", 
+)
+```
+
 # Example: Retrieving task result
 ```python
 solution = salamoonder_api.getTaskResult("YOUR_API_KEY_HERE", task_id)
