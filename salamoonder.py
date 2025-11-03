@@ -19,8 +19,6 @@ class salamoonder:
                 - For "KasadaCaptchaSolver": 
                     pjs_url (str): The URL of the page JavaScript file.
                     cd_only (bool): Whether to use cdOnly.
-                - For "Twitch_CheckIntegrity": 
-                    token (str): The Twitch token for integrity checking.
                 - For "Twitch_PublicIntegrity": 
                     access_token (str): The Twitch access token.
                     proxy (str): The proxy IP address and port.
@@ -35,9 +33,6 @@ class salamoonder:
             if task_type == "KasadaCaptchaSolver":
                 task_payload["task"]["pjs"] = kwargs.get("pjs_url")
                 task_payload["task"]["cdOnly"] = kwargs.get("cd_only")
-
-            elif task_type == "Twitch_CheckIntegrity":
-                task_payload["task"]["token"] = kwargs.get("token")
 
             elif task_type == "Twitch_PublicIntegrity":
                 task_payload["task"]["access_token"] = kwargs.get("access_token")
