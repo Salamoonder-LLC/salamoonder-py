@@ -81,7 +81,7 @@ task_id = client.task.createTask(
 ```python
 task_id = client.task.createTask(
     task_type="DataDomeInterstitialSolver",
-    captcha_url=https://geo.captcha-delivery.com/interstitial/...",
+    captcha_url="https://geo.captcha-delivery.com/interstitial/...",
     user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebK...",
     country_code="us"
 )
