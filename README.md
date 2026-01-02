@@ -81,19 +81,19 @@ task_id = client.task.createTask(
 ```python
 task_id = client.task.createTask(
     task_type="DataDomeInterstitialSolver",
-    "captcha_url": "https://geo.captcha-delivery.com/interstitial/...",
-    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebK...",
-    "country_code": "us"
+    captcha_url=https://geo.captcha-delivery.com/interstitial/...",
+    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebK...",
+    country_code="us"
 )
 ```
 
 # Example: Creating a DataDomeSliderSolver task
 ```python
 task_id = client.task.createTask(
-    "type": "DataDomeSliderSolver",
-    "captcha_url": "https://geo.captcha-delivery.com/captcha/...",
-    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64  ...",
-    "country_code": "us"
+    task_type="DataDomeSliderSolver",
+    captcha_url="https://geo.captcha-delivery.com/captcha/...",
+    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64  ...",
+    country_code="us"
 )
 ```
 
