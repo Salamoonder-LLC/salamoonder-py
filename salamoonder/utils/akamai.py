@@ -427,7 +427,7 @@ class AkamaiSBSD:
         logger.info("Posting SBSD payload")
 
         try:
-            decoded = base64.b64decode(sbsd_payload).decode("utf-8", errors="replace")
+            decoded = base64.b64decode(sbsd_payload).decode("utf-8")
         except Exception as e:
             logger.error("SBSD payload decode failed: %s", e)
             return None
@@ -458,6 +458,10 @@ class AkamaiSBSD:
         }
 
         logger.debug("SBSD post payload size: %d bytes", len(decoded))
+        
+        # Extract URL without query string
+        parsed_post = urlparse(post_url)
+        post_url = f"{parsed_post.scheme}://{parsed_post.netloc}{parsed_post.path}"
         logger.debug("SBSD post URL: %s", post_url)
 
         resp = self.client.post(
@@ -468,6 +472,7 @@ class AkamaiSBSD:
             verify=False,
             impersonate="chrome133a"
         )
+        print(post_url)
 
         logger.info("SBSD response status: %d", resp.status_code)
         
@@ -483,7 +488,6 @@ class AkamaiSBSD:
 
         logger.info("SBSD post succeeded")
         logger.debug("Session cookies: %s", cookies)
-
 
         return {
             "cookies": cookies
