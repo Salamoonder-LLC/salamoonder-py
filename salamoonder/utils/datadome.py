@@ -115,6 +115,7 @@ class Datadome:
             "cid": datadome_cookie,
             "referer": referer,
             "s": str(parsed.get("s")),
+            "e": str(parsed.get("e")),
             "b": str(parsed.get("b")),
             "dm": "cd",
         }
