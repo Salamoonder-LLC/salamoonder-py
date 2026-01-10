@@ -35,10 +35,20 @@ class Salamoonder:
     """
     
     def __init__(self, api_key):
-        self.client = Client(api_key)
-        self.task = Tasks(self.client)
-        
-        # Initialize utils
-        self.akamai = AkamaiWeb(self.client)
-        self.akamai_sbsd = AkamaiSBSD(self.client)
-        self.datadome = Datadome(self.client)
+        self._client = Client(api_key)
+
+        self.task = Tasks(self._client)
+
+        self.akamai = AkamaiWeb(self._client)
+        self.akamai_sbsd = AkamaiSBSD(self._client)
+        self.datadome = Datadome(self._client)
+
+    def get(self, *args, **kwargs):
+        return self._client.get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        return self._client.post(*args, **kwargs)
+
+    @property
+    def session(self):
+        return self._client.session
