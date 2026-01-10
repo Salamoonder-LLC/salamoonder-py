@@ -472,7 +472,6 @@ class AkamaiSBSD:
             verify=False,
             impersonate="chrome133a"
         )
-        print(post_url)
 
         logger.info("SBSD response status: %d", resp.status_code)
         
