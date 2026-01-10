@@ -282,7 +282,7 @@ class AkamaiWeb:
         logger.debug("Session cookies after request: %s", dict(self.client.session.cookies))
         
         return {
-            "abck": abck,
+            "_abck": abck,
             "bm_sz": bm_sz,
             "cookies": dict(self.client.session.cookies)
         }
