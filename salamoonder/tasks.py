@@ -29,6 +29,10 @@ class Tasks:
             - Twitch_PublicIntegrity: Requires access_token, proxy; optional device_id, client_id
             - IncapsulaReese84: Requires website, submit_payload
             - IncapsulaUTMVCSolver: Requires website
+            - AkamaiWebSensorSolver: Requires url, abck, bmsz, script, sensor_url, count, data
+            - AkamaiSBSDSolver: Requires url, cookie, sbsd_url, script
+            - DataDomeSliderSolver: Requires captcha_url; optional user_agent, country_code
+            - DataDomeInterstitialSolver: Requires captcha_url; optional user_agent, country_code
             
         Returns:
             str: Task ID for polling results
