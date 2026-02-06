@@ -66,8 +66,12 @@ class Tasks:
             task["website"] = kwargs.get("website")
             task["submit_payload"] = kwargs.get("submit_payload")
 
+            if "reese_url" in kwargs:
+                task["reese_url"] = kwargs.get("reese_url")
+
             if "user_agent" in kwargs:
                 task['user_agent'] = kwargs.get("user_agent")
+
 
         elif task_type == "IncapsulaUTMVCSolver":
             task["type"] = "IncapsulaUTMVCSolver"
