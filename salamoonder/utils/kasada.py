@@ -306,7 +306,7 @@ class Kasada:
             "x-kpsdk-ct": solution['headers']['x-kpsdk-ct'],
             "x-kpsdk-dt": solution['headers']['x-kpsdk-dt'],
             "x-kpsdk-im": solution['headers']['x-kpsdk-im'],
-            # "x-kpsdk-h": "01",
+            "x-kpsdk-h": "01",
             "x-kpsdk-v": solution['headers']['x-kpsdk-v'],
         }
 
