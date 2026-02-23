@@ -60,7 +60,6 @@ class Datadome:
         if parsed.get("t") == "bv":
             logger.error("IP is blocked (t=bv), exiting...")
             exit(1)
-            return None
         
         params = {
             "initialCid": parsed.get("cid"),

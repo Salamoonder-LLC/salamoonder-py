@@ -8,11 +8,9 @@ class APIError(RuntimeError):
     """Raised when the API returns an error response."""
     pass
 
-
 class MissingAPIKeyError(ValueError):
     """Raised when API key is missing or invalid."""
     pass
-
 
 class Client:
     """HTTP client for Salamoonder API requests using curl_cffi.
@@ -82,6 +80,7 @@ class Client:
             data = resp.json()
         except ValueError:
             logger.error("Invalid JSON response (status=%d)", resp.status_code)
+            
             raise APIError(f"Invalid response from API ({resp.status_code})")
 
         if resp.status_code >= 400:

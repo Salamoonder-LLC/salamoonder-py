@@ -26,6 +26,7 @@ class Tasks:
             
         Supported task types:
             - KasadaCaptchaSolver: Requires pjs_url, optional cd_only
+            - KasadaPayloadSolver: Requires url, script_content; optional script_url
             - Twitch_PublicIntegrity: Requires access_token, proxy; optional device_id, client_id
             - IncapsulaReese84: Requires website, submit_payload
             - IncapsulaUTMVCSolver: Requires website
@@ -33,7 +34,6 @@ class Tasks:
             - AkamaiSBSDSolver: Requires url, cookie, sbsd_url, script
             - DataDomeSliderSolver: Requires captcha_url; optional user_agent, country_code
             - DataDomeInterstitialSolver: Requires captcha_url; optional user_agent, country_code
-            
         Returns:
             str: Task ID for polling results
             
@@ -53,6 +53,14 @@ class Tasks:
             task["pjs"] = kwargs.get("pjs_url")
             task["cdOnly"] = kwargs.get("cd_only")
 
+        if task_type == "KasadaPayloadSolver":
+            task["url"] = kwargs.get("url")
+            
+            if "script_url" in kwargs: 
+                task["script_url"] = kwargs.get("script_url")
+
+            task["script_content"] = kwargs.get("script_content")
+
         elif task_type == "Twitch_PublicIntegrity":
             task["access_token"] = kwargs.get("access_token")
             task["proxy"] = kwargs.get("proxy")
@@ -68,10 +76,9 @@ class Tasks:
 
             if "reese_url" in kwargs:
                 task["reese_url"] = kwargs.get("reese_url")
-
+                
             if "user_agent" in kwargs:
                 task['user_agent'] = kwargs.get("user_agent")
-
 
         elif task_type == "IncapsulaUTMVCSolver":
             task["type"] = "IncapsulaUTMVCSolver"

@@ -3,5 +3,6 @@
 
 from .akamai import AkamaiWeb, AkamaiSBSD
 from .datadome import Datadome
+from .kasada import Kasada
 
-__all__ = ['AkamaiWeb', 'AkamaiSBSD', 'Datadome']
+__all__ = ['AkamaiWeb', 'AkamaiSBSD', 'Datadome', 'Kasada']

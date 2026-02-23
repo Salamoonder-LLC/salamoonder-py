@@ -1,7 +1,7 @@
 import logging
 from .client import Client
 from .tasks import Tasks
-from .utils import AkamaiWeb, Datadome, AkamaiSBSD
+from .utils import AkamaiWeb, Datadome, AkamaiSBSD, Kasada
 
 # Configure package logger with console output
 logger = logging.getLogger(__name__)
@@ -42,6 +42,7 @@ class Salamoonder:
         self.akamai = AkamaiWeb(self._client)
         self.akamai_sbsd = AkamaiSBSD(self._client)
         self.datadome = Datadome(self._client)
+        self.kasada = Kasada(self._client)
 
     def get(self, *args, **kwargs):
         return self._client.get(*args, **kwargs)
