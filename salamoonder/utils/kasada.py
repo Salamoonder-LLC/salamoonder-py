@@ -327,12 +327,31 @@ class Kasada:
 
         if resp.status_code != 200:
             logger.warning("Unexpected response status: %d - %s", resp.status_code, resp.text[:200])
+        
+        try:
+            response_json = json.loads(resp.text)
+            if response_json.get("reload") is not True:
+                logger.error("Response missing or has reload!=true: %s", resp.text)
+                return None
+        except (json.JSONDecodeError, ValueError):
+            logger.error("Failed to parse response JSON: %s", resp.text[:200])
+            return None
+        
+        if 'x-kpsdk-r' not in resp.headers:
+            logger.error("Missing x-kpsdk-r header in response")
+            return None
+        
+        kpsdk_r_value = resp.headers.get('x-kpsdk-r', '')
+        if kpsdk_r_value in ['1-AA', '1-AQ']:
+            logger.error("Bad fingerprint or proxy detected: x-kpsdk-r=%s", kpsdk_r_value)
+            return None
 
         mfc_response = None
+
         if mfc:
             mfc_response = self.client.get(f"https://{urlparse(url).netloc}/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/mfc", headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
 
-        return {
+        result = {
             "response": {
                 "status_code": resp.status_code,
                 "text": resp.text,
@@ -343,6 +362,10 @@ class Kasada:
             "x-kpsdk-r": resp.headers['x-kpsdk-r'] if 'x-kpsdk-r' in resp.headers else None,
             "x-kpsdk-st": resp.headers['x-kpsdk-st'] if 'x-kpsdk-st' in resp.headers else None,
             "x-kpsdk-v": solution['headers']['x-kpsdk-v'] if 'x-kpsdk-v' in solution['headers'] else None,
-            "x-kpsdk-h": mfc_response.headers['x-kpsdk-h'] if mfc_response and 'x-kpsdk-h' in mfc_response.headers else None,
-            "x-kpsdk-fc": mfc_response.headers['x-kpsdk-fc'] if mfc_response and 'x-kpsdk-fc' in mfc_response.headers else None,
         }
+        
+        if mfc and mfc_response:
+            result["x-kpsdk-h"] = mfc_response.headers['x-kpsdk-h'] if 'x-kpsdk-h' in mfc_response.headers else None
+            result["x-kpsdk-fc"] = mfc_response.headers['x-kpsdk-fc'] if 'x-kpsdk-fc' in mfc_response.headers else None
+        
+        return result
