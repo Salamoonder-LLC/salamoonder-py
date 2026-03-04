@@ -320,7 +320,7 @@ class Kasada:
             data=pyld,
             proxy=proxy,
             verify=False,
-            impersonate="chrome133a"
+            impersonate="chrome107"
         )
 
         logger.info("Payload post response: status=%d", resp.status_code)
