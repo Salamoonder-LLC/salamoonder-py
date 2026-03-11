@@ -201,8 +201,8 @@ class Kasada:
         logger.info("Fetching fingerprint endpoint...")
         resp = await self.client.get(url, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
 
-        if resp.status_code != 429:
-            logger.warning("Expected 429 status code, got %d", resp.status_code)
+        if resp.status_code not in (200, 429):
+            logger.warning("Expected 200 or 429 status code, got %d", resp.status_code)
             return None
         
         script_data = self._get_script_url(resp.text, base_url)
