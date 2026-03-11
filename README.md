@@ -24,7 +24,7 @@ A straightforward Python wrapper for Salamoonder's API, designed for easy integr
 ## Installation
 
 ```bash
-pip install salamoonder-sdk
+pip install salamoonder
 ```
 
 ## Requirements
@@ -42,7 +42,7 @@ async def main():
         # Create and solve a Kasada captcha task
         task_id = await client.task.createTask('KasadaCaptchaSolver', 
             pjs_url='https://example.com/script.js',
-            cd_only=False
+            cd_only="false"
         )
         
         # Poll for the result
@@ -80,7 +80,7 @@ async with Salamoonder('YOUR_API_KEY') as client:
     # Kasada Captcha  
     captcha_task_id = await client.task.createTask('KasadaCaptchaSolver',
         pjs_url='https://example.com/script.js',
-        cd_only=False
+        cd_only="false"
     )
     captcha_result = await client.task.getTaskResult(captcha_task_id)
     
@@ -219,7 +219,7 @@ async def main():
         async with Salamoonder('YOUR_API_KEY') as client:
             task_id = await client.task.createTask('KasadaCaptchaSolver',
                 pjs_url='https://example.com/script.js',
-                cd_only=False
+                cd_only="false"
             )
             result = await client.task.getTaskResult(task_id)
     except MissingAPIKeyError:
@@ -304,6 +304,6 @@ MIT - See [LICENSE](LICENSE) file for details
 
 For issues, feature requests, or questions, please visit:
 - **Website**: [salamoonder.com](https://salamoonder.com)
-- **Documentation**: [salamoonder.com/docs](https://salamoonder.com/docs)
+- **Documentation**: [salamoonder.com/docs](https://apidocs.salamoonder.com)
 - **Support**: [support@salamoonder.com](mailto:support@salamoonder.com)
-- **Discord**: [Join our community](https://discord.gg/salamoonder)
+- **Telegram**: [Text us!](https://t.me/salamoonder_bot)
