@@ -13,7 +13,7 @@ class MissingAPIKeyError(ValueError):
     pass
 
 class Client:
-    """HTTP client for Salamoonder API requests using curl_cffi.
+    """Async HTTP client for Salamoonder API requests using curl_cffi.
     
     Args:
         api_key: Your Salamoonder API key
@@ -22,6 +22,10 @@ class Client:
         
     Raises:
         MissingAPIKeyError: If api_key is empty or whitespace only
+        
+    Usage:
+        async with Client(api_key="your_key") as client:
+            result = await client.post(url, data)
     """
     
     def __init__(self, api_key: str, base_url: str = "https://salamoonder.com/api", impersonate: str = "chrome133a"):
@@ -34,10 +38,20 @@ class Client:
         self.api_key = api_key
         self.base_url = base_url
         self.impersonate = impersonate
-        self.session = requests.Session()
+        self.session = None
         logger.debug("Client initialized with base_url: %s, impersonate: %s", base_url, impersonate)
+    
+    async def __aenter__(self):
+        """Async context manager entry."""
+        self.session = requests.AsyncSession()
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Async context manager exit."""
+        if self.session:
+            await self.session.close()
 
-    def _post(self, url: str, payload: dict, proxy: str = None):
+    async def _post(self, url: str, payload: dict, proxy: str = None):
         """Execute a POST request to the API.
         
         Args:
@@ -74,7 +88,7 @@ class Client:
         else:
             logger.debug("POST %s", url)
         
-        resp = self.session.post(url, **request_kwargs)
+        resp = await self.session.post(url, **request_kwargs)
 
         try:
             data = resp.json()
@@ -91,7 +105,7 @@ class Client:
         logger.debug("Request successful (status=%d)", resp.status_code)
         return data
     
-    def get(self, url: str, proxy: str = None, headers: dict = None, **kwargs):
+    async def get(self, url: str, proxy: str = None, headers: dict = None, **kwargs):
         """Execute a GET request (helper for custom functions).
         
         Args:
@@ -105,7 +119,7 @@ class Client:
             Response: The curl_cffi response object
             
         Example:
-            >>> response = client.get("https://example.com", proxy="http://proxy:8080")
+            >>> response = await client.get("https://example.com", proxy="http://proxy:8080")
         """
         request_kwargs = {
             "impersonate": self.impersonate
@@ -123,9 +137,9 @@ class Client:
         else:
             logger.debug("GET %s", url)
         
-        return self.session.get(url, **request_kwargs)
+        return await self.session.get(url, **request_kwargs)
     
-    def post(self, url: str, proxy: str = None, headers: dict = None, data=None, json=None, **kwargs):
+    async def post(self, url: str, proxy: str = None, headers: dict = None, data=None, json=None, **kwargs):
         """Execute a POST request (helper for custom functions).
         
         Args:
@@ -141,7 +155,7 @@ class Client:
             Response: The curl_cffi response object
             
         Example:
-            >>> response = client.post(
+            >>> response = await client.post(
             ...     "https://example.com/api",
             ...     json={"key": "value"},
             ...     proxy="http://proxy:8080"
@@ -167,4 +181,4 @@ class Client:
         else:
             logger.debug("POST %s", url)
         
-        return self.session.post(url, **request_kwargs)
+        return await self.session.post(url, **request_kwargs)

@@ -1,4 +1,4 @@
-import time
+import asyncio
 import logging
 from salamoonder.client import Client, APIError
 
@@ -17,7 +17,7 @@ class Tasks:
         self.create_url = "https://salamoonder.com/api/createTask"
         self.get_url = "https://salamoonder.com/api/getTaskResult"
 
-    def createTask(self, task_type, **kwargs):
+    async def createTask(self, task_type, **kwargs):
         """Create a new captcha solving task.
         
         Args:
@@ -129,14 +129,14 @@ class Tasks:
             task["country_code"] = kwargs.get("country_code")
 
         logger.info("Creating task of type: %s", task_type)
-        data = self.client._post(self.create_url, {"task": task})
+        data = await self.client._post(self.create_url, {"task": task})
 
         task_id = data.get("taskId")
         logger.info("Task created with ID: %s", task_id)
 
         return task_id
 
-    def getTaskResult(self, task_id, interval=1):
+    async def getTaskResult(self, task_id, interval=1):
         """Poll for task completion and retrieve results.
         
         Args:
@@ -150,20 +150,20 @@ class Tasks:
             APIError: If task fails or returns unexpected status
             
         Example:
-            >>> result = tasks.getTaskResult("task_123456")
+            >>> result = await tasks.getTaskResult("task_123456")
         """
         logger.info("Polling task %s (interval=%ds)", task_id, interval)
         attempts = 0
         
         while True:
             attempts += 1
-            data = self.client._post(self.get_url, {"taskId": task_id})
+            data = await self.client._post(self.get_url, {"taskId": task_id})
 
             status = data.get("status")
             logger.debug("Task %s status: %s (attempt %d)", task_id, status, attempts)
             
             if status == "PENDING":
-                time.sleep(interval)
+                await asyncio.sleep(interval)
                 continue
 
             if status == "ready":

@@ -127,7 +127,7 @@ class Kasada:
         logger.debug("Resolved %d external script URLs", len(script_urls))
         return { "type": "external", "urls": script_urls }
     
-    def parse_kasada_script(self, url: str, user_agent: str, proxy: str = None):
+    async def parse_kasada_script(self, url: str, user_agent: str, proxy: str = None):
         """Extract Kasada protection script from a blocked page.
         
         This method performs a complete Kasada script extraction workflow:
@@ -182,7 +182,6 @@ class Kasada:
         self.client.session.headers.clear()
 
         base_url = f"https://{urlparse(url).netloc}"
-        fingerprint_url = f"{base_url}/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/fp?x-kpsdk-v=j-1.2.170"
 
         headers = {
             "sec-ch-ua": self._extract_sec_ch_ua(user_agent),
@@ -200,7 +199,7 @@ class Kasada:
         }
 
         logger.info("Fetching fingerprint endpoint...")
-        resp = self.client.get(fingerprint_url, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
+        resp = await self.client.get(url, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
 
         if resp.status_code != 429:
             logger.warning("Expected 429 status code, got %d", resp.status_code)
@@ -219,7 +218,7 @@ class Kasada:
             
             for idx, src in enumerate(script_data["urls"], 1):
                 logger.debug("Fetching external script %d/%d: %s", idx, len(script_data["urls"]), src[:80])
-                resp = self.client.get(src, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
+                resp = await self.client.get(src, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
                 
                 if "ips.js" in resp.text or "KPSDK.scriptStart" in resp.text:
                     scripts_content = resp.text
@@ -235,7 +234,7 @@ class Kasada:
             "script_url": script_url
         }
 
-    def post_payload(self, url: str, solution: dict, user_agent: str, proxy: str = None, mfc: bool = False):
+    async def post_payload(self, url: str, solution: dict, user_agent: str, proxy: str = None, mfc: bool = False):
         """Post solved Kasada payload to the challenge verification endpoint.
         
         This method sends the solved payload (from Salamoonder) back to Kasada's
@@ -314,13 +313,13 @@ class Kasada:
         logger.debug("Payload size: %d bytes", len(pyld))
 
         logger.info("Posting payload to /tl endpoint...")
-        resp = self.client.post(
+        resp = await self.client.post(
             url=f"https://{urlparse(url).netloc}/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/tl",
             headers=headers,
             data=pyld,
             proxy=proxy,
             verify=False,
-            impersonate="chrome107"
+            impersonate="chrome133a"
         )
 
         logger.info("Payload post response: status=%d", resp.status_code)
@@ -349,7 +348,7 @@ class Kasada:
         mfc_response = None
 
         if mfc:
-            mfc_response = self.client.get(f"https://{urlparse(url).netloc}/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/mfc", headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
+            mfc_response = await self.client.get(f"https://{urlparse(url).netloc}/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/mfc", headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
 
         result = {
             "response": {

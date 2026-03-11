@@ -1,0 +1,96 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "salamoonder"
+version = "1.0.0"
+description = "Async Python SDK for Salamoonder's anti-bot and captcha bypass API. Support for Akamai, Kasada, DataDome, and more."
+authors = [
+    {name = "Salamoonder", email = "support@salamoonder.com"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers", 
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9", 
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: Browsers",
+    "Topic :: Internet :: WWW/HTTP :: Session", 
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = [
+    "async", "http", "requests", "captcha", "bot-protection", 
+    "akamai", "kasada", "datadome", "cloudflare", "antibot"
+]
+dependencies = [
+    "curl-cffi>=0.7.0",
+    "beautifulsoup4>=4.12.0",
+]
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://salamoonder.com"
+Documentation = "https://apidocs.salamoonder.com" 
+Repository = "https://github.com/Salamoonder-LLC/salamoonder-py"
+
+[project.optional-dependencies] 
+dev = [
+    "black>=23.0.0",
+    "isort>=5.12.0",  
+    "mypy>=1.5.0",
+    "pre-commit>=3.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["salamoonder*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+known_first_party = ["salamoonder"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["curl_cffi.*", "bs4.*"]
+ignore_missing_imports = true

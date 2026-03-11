@@ -1,0 +1,16 @@
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+*.so
+.Python
+.venv/
+.vscode/
+.idea/
+*.swp
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.dmypy.json

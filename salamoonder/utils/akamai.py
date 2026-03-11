@@ -71,7 +71,7 @@ class AkamaiWeb:
         logger.debug("Extracted Akamai URL: %s", akamai_url)
         return base_url, akamai_url
     
-    def fetch_and_extract(self, website_url: str, user_agent: str, proxy: str = None):
+    async def fetch_and_extract(self, website_url: str, user_agent: str, proxy: str = None):
         """Comprehensive function to fetch and extract all Akamai data.
         
         This function handles the complete Akamai flow:
@@ -93,7 +93,7 @@ class AkamaiWeb:
                 - bm_sz: bm_sz cookie value
             
         Example:
-            >>> data = akamai.fetch_and_extract(
+            >>> data = await akamai.fetch_and_extract(
             ...     website_url="https://example.com",
             ...     user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0",
             ...     proxy="http://proxy:8080"
@@ -123,7 +123,7 @@ class AkamaiWeb:
         }
         
         logger.info("Fetching initial page...")
-        resp = self.client.get(website_url, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
+        resp = await self.client.get(website_url, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
         
         if resp.status_code != 200:
             logger.error("Initial request failed with status %d: %s", resp.status_code, resp.text)
@@ -156,7 +156,7 @@ class AkamaiWeb:
         del headers["priority"]
         
         logger.info("Fetching Akamai script...")
-        script_resp = self.client.get(akamai_url, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
+        script_resp = await self.client.get(akamai_url, headers=headers, proxy=proxy, verify=False, impersonate="chrome133a")
         
         if script_resp.status_code != 200:
             logger.error("Script fetch failed with status %d", script_resp.status_code)
@@ -180,7 +180,7 @@ class AkamaiWeb:
             "bm_sz": bm_sz,
         }
     
-    def post_sensor(self, akamai_url: str, sensor_data: str, user_agent: str, 
+    async def post_sensor(self, akamai_url: str, sensor_data: str, user_agent: str, 
                     website_url: str, proxy: str = None):
         """Post sensor data to Akamai endpoint and get updated _abck cookie.
         
@@ -245,7 +245,7 @@ class AkamaiWeb:
         payload = {'sensor_data': sensor_data}
         logger.debug("Posting sensor data, payload size: %d bytes", len(str(payload)))
         
-        resp = self.client.post(
+        resp = await self.client.post(
             url=akamai_url,
             headers=headers,
             json=payload,
@@ -325,7 +325,7 @@ class AkamaiSBSD:
 
         return urljoin(base_url, match.group(1))
     
-    def fetch_and_extract(self, website_url: str, user_agent: str, proxy: str = None):
+    async def fetch_and_extract(self, website_url: str, user_agent: str, proxy: str = None):
         logger.info("Starting SBSD extraction for: %s", website_url)
 
         self.client.session.headers.clear()
@@ -348,7 +348,7 @@ class AkamaiSBSD:
         }
 
         logger.info("Fetching initial page...")
-        resp = self.client.get(
+        resp = await self.client.get(
             website_url,
             headers=headers,
             proxy=proxy,
@@ -382,7 +382,7 @@ class AkamaiSBSD:
         del headers["priority"]
 
         logger.info("Fetching SBSD script...")
-        script_resp = self.client.get(
+        script_resp = await self.client.get(
             sbsd_url,
             headers=headers,
             proxy=proxy,
@@ -421,7 +421,7 @@ class AkamaiSBSD:
             "cookie_value": cookie_value,
         }
     
-    def post_sbsd(self, sbsd_payload: str, post_url: str, user_agent: str, website_url: str, proxy: str = None):
+    async def post_sbsd(self, sbsd_payload: str, post_url: str, user_agent: str, website_url: str, proxy: str = None):
         """Post SBSD payload and return updated cookies"""
 
         logger.info("Posting SBSD payload")
@@ -464,7 +464,7 @@ class AkamaiSBSD:
         post_url = f"{parsed_post.scheme}://{parsed_post.netloc}{parsed_post.path}"
         logger.debug("SBSD post URL: %s", post_url)
 
-        resp = self.client.post(
+        resp = await self.client.post(
             url=post_url,
             headers=headers,
             json=body,
