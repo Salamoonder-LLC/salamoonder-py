@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "salamoonder"
-version = "1.0.0"
+version = "1.0.1"
 description = "Async Python SDK for Salamoonder's anti-bot and captcha bypass API. Support for Akamai, Kasada, DataDome, and more."
 authors = [
     {name = "Salamoonder", email = "support@salamoonder.com"}
