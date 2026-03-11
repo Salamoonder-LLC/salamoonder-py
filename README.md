@@ -2,7 +2,7 @@
 
 A straightforward Python wrapper for Salamoonder's API, designed for easy integration and async usage. Perfect for solving captchas and bypassing bot detection on various platforms.
 
-[![PyPI version](https://badge.fury.io/py/salamoonder-sdk.svg)](https://badge.fury.io/py/salamoonder)
+[![PyPI version](https://badge.fury.io/py/salamoonder.svg)](https://badge.fury.io/py/salamoonder)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
