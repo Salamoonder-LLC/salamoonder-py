@@ -1,3 +1,4 @@
+import base64
 import json
 import re
 import logging
@@ -15,7 +16,7 @@ class Datadome:
         
     Example:
         >>> datadome = DataDomeUtils(client)
-        >>> captcha_url = datadome.parse_slider_url(
+        >>> result = await datadome.get_slider_challenge(
         ...     html=str,
         ...     datadome_cookie=str,
         ...     referer=str,
@@ -25,29 +26,23 @@ class Datadome:
     def __init__(self, client: Client):
         self.client = client
  
-    def parse_slider_url(self, html: str, datadome_cookie: str, referer: str):
-        """Parse and construct DataDome slider captcha URL
-        
-        Extracts the DataDome JavaScript object from the HTML and constructs
-        the device check URL for the slider captcha challenge.
-        
+    async def get_slider_challenge(self, html: str, datadome_cookie: str, referer: str, proxy: str = None, headers: dict = None, user_agent: str = None):
+        """Parse and construct DataDome slider captcha URL, then fetch the challenge page.
+
         Args:
             html: Full HTML code.
             datadome_cookie: Current DD cookie.
             referer: The website you're trying to solve.
-            
+            proxy: Optional proxy string.
+            headers: Optional headers dict to send with the challenge request.
+            user_agent: Optional User-Agent string (merged into headers, takes precedence).
+
         Returns:
-            str: Constructed slider URL
-            
-        Example:
-            >>> url = datadome.parse_slider_url(
-            ...     html=response.text,
-            ...     datadome_cookie="ABC123...",
-            ...     referer="https://example.com/page"
-            ... )
+            dict: ``{"captcha_url": str, "challenge_page": str}`` where
+                  ``challenge_page`` is the response body encoded as base64.
         """
         logger.info("Parsing DataDome slider URL from HTML")
-        
+
         try:
             js_object = html.split("var dd=")[1].split("</script>")[0]
             js_object = js_object.replace("'", '"')
@@ -56,11 +51,11 @@ class Datadome:
         except Exception as e:
             logger.error("Failed to parse object: %s", e)
             raise RuntimeError("Failed to parse object.")
-        
+
         if parsed.get("t") == "bv":
             logger.error("IP is blocked (t=bv), exiting...")
             exit(1)
-        
+
         params = {
             "initialCid": parsed.get("cid"),
             "hash": parsed.get("hsh"),
@@ -71,35 +66,38 @@ class Datadome:
             "e": parsed.get("e"),
             "dm": "cd",
         }
-        
+
         captcha_url = f"https://geo.captcha-delivery.com/captcha/?{urlencode(params)}"
-        logger.info("Constructed slider URL: %s", captcha_url[:80] + "...")
-        
-        return captcha_url
+        logger.info("Fetching slider challenge page: %s", captcha_url[:80] + "...")
+        merged_headers = {**(headers or {})}
+
+        if user_agent:
+            merged_headers["User-Agent"] = user_agent
+
+        response = await self.client.get(captcha_url, proxy=proxy, headers=merged_headers or None)
+
+        return {
+            "captcha_url": captcha_url,
+            "challenge_page": base64.b64encode(response.content).decode("utf-8"),
+        }
     
-    def parse_interstitial_url(self, html: str, datadome_cookie: str, referer: str):
-        """Parse and construct DataDome interstitial challenge URL
-        
-        Extracts the DataDome JavaScript object from the HTML and constructs
-        the device check URL for the interstitial challenge.
-        
+    async def get_interstitial_challenge(self, html: str, datadome_cookie: str, referer: str, proxy: str = None, headers: dict = None, user_agent: str = None):
+        """Parse and construct DataDome interstitial challenge URL, then fetch the challenge page.
+
         Args:
             html: Full HTML code.
             datadome_cookie: Current DD cookie.
             referer: The website you're trying to solve.
-            
+            proxy: Optional proxy string.
+            headers: Optional headers dict to send with the challenge request.
+            user_agent: Optional User-Agent string (merged into headers, takes precedence).
+
         Returns:
-            str: Constructed interstitial URL
-            
-        Example:
-            >>> url = datadome.parse_interstitial_url(
-            ...     html=response.text,
-            ...     datadome_cookie="ABC123...",
-            ...     referer="https://example.com/page"
-            ... )
+            dict: ``{"captcha_url": str, "challenge_page": str}`` where
+                  ``challenge_page`` is the response body encoded as base64.
         """
         logger.info("Parsing DataDome interstitial URL from HTML")
-        
+
         try:
             js_object = html.split("var dd=")[1].split("</script>")[0]
             js_object = js_object.replace("'", '"')
@@ -108,7 +106,7 @@ class Datadome:
         except Exception as e:
             logger.error("Failed to parse object: %s", e)
             raise RuntimeError("Failed to parse object.")
-        
+
         params = {
             "initialCid": parsed.get("cid"),
             "hash": parsed.get("hsh"),
@@ -119,8 +117,18 @@ class Datadome:
             "b": str(parsed.get("b")),
             "dm": "cd",
         }
-        
+
         interstitial_url = f"https://geo.captcha-delivery.com/interstitial/?{urlencode(params)}"
-        logger.info("Constructed interstitial URL: %s", interstitial_url[:80] + "...")
+        logger.info("Fetching interstitial challenge page: %s", interstitial_url[:80] + "...")
         
-        return interstitial_url
+        merged_headers = {**(headers or {})}
+
+        if user_agent:
+            merged_headers["User-Agent"] = user_agent
+
+        response = await self.client.get(interstitial_url, proxy=proxy, headers=merged_headers or None)
+
+        return {
+            "captcha_url": interstitial_url,
+            "challenge_page": base64.b64encode(response.content).decode("utf-8"),
+        }
