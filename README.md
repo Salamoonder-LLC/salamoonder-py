@@ -44,7 +44,7 @@ async def main():
             pjs_url='https://example.com/script.js',
             cd_only="false"
         )
-        
+      
         # Poll for the result
         solution = await client.task.getTaskResult(task_id)
         print('Solution:', solution)
@@ -68,7 +68,7 @@ async with Salamoonder('YOUR_API_KEY') as client:
         data='sensor_data',
         user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64)...'
     )
-    
+  
     result = await client.task.getTaskResult(task_id, interval=2)  # Poll every 2 seconds
     print('Result:', result)
 ```
@@ -83,7 +83,7 @@ async with Salamoonder('YOUR_API_KEY') as client:
         cd_only="false"
     )
     captcha_result = await client.task.getTaskResult(captcha_task_id)
-    
+  
     # Kasada Payload
     payload_task_id = await client.task.createTask('KasadaPayloadSolver',
         url='https://example.com',
@@ -97,18 +97,33 @@ async with Salamoonder('YOUR_API_KEY') as client:
 
 ```python
 async with Salamoonder('YOUR_API_KEY') as client:
+    ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
     # Slider captcha
+    challenge = await client.datadome.get_slider_challenge(
+        html=response.text,
+        datadome_cookie='your_dd_cookie',
+        referer='https://example.com/page',
+        user_agent=ua,
+    )
     slider_task_id = await client.task.createTask('DataDomeSliderSolver',
-        captcha_url='https://captcha.example.com/slider',
-        country_code='US',
-        user_agent='Mozilla/5.0...'
+        captcha_url=challenge['captcha_url'],
+        challenge_page=challenge['challenge_page'],
+        user_agent=ua,
     )
     slider_result = await client.task.getTaskResult(slider_task_id)
-    
-    # Interstitial captcha  
+
+    # Interstitial captcha
+    challenge = await client.datadome.get_interstitial_challenge(
+        html=response.text,
+        datadome_cookie='your_dd_cookie',
+        referer='https://example.com/page',
+        user_agent=ua,
+    )
     interstitial_task_id = await client.task.createTask('DataDomeInterstitialSolver',
-        captcha_url='https://captcha.example.com/interstitial',
-        country_code='US'
+        captcha_url=challenge['captcha_url'],
+        challenge_page=challenge['challenge_page'],
+        user_agent=ua,
     )
     interstitial_result = await client.task.getTaskResult(interstitial_task_id)
 ```
@@ -124,7 +139,7 @@ async with Salamoonder('YOUR_API_KEY') as client:
         headers={'User-Agent': 'Custom UA'},
         proxy='http://proxy:port'
     )
-    
+  
     # POST request
     post_response = await client.post('https://example.com/api',
         json={'key': 'value'},
@@ -145,32 +160,38 @@ async with Salamoonder(api_key, base_url=None, impersonate=None) as client:
 ```
 
 **Parameters:**
+
 - `api_key` (str) - Your Salamoonder API key (required)
 - `base_url` (str) - API base URL (default: `https://salamoonder.com/api`)
 - `impersonate` (str) - Browser to impersonate (default: `chrome133a`)
 
 **Properties:**
+
 - `task` - Tasks API instance (recommended for solving captchas)
 - `akamai`, `akamai_sbsd`, `datadome`, `kasada` - Low-level solver instances (advanced use only)
 - `session` - Session information and cookies
 
 **Methods:**
+
 - `get(url, **kwargs)` - Make a GET request
 - `post(url, **kwargs)` - Make a POST request
 
 ## Supported Anti-Bot Solutions
 
 ### 🔒 Kasada
+
 - Script extraction and parsing
-- Payload solving  
+- Payload solving
 - Challenge submission
 
 ### 🛡️ Akamai Bot Manager
+
 - Web sensor data extraction
 - SBSD (Sensor Based Script Detection) support
 - Cookie management
 
 ### 🔐 DataDome
+
 - Slider captcha URL parsing
 - Interstitial challenge support
 
@@ -183,7 +204,7 @@ async with Salamoonder(api_key, base_url=None, impersonate=None) as client:
 - `DataDomeSliderSolver`
 - `DataDomeInterstitialSolver`
 - `IncapsulaReese84Solver`
-- `IncapsulaUTMVCSolver` 
+- `IncapsulaUTMVCSolver`
 - `Twitch_PublicIntegrity`
 
 ## Module Exports
@@ -235,6 +256,7 @@ asyncio.run(main())
 ## Configuration
 
 ### Custom Base URL
+
 ```python
 async with Salamoonder(
     api_key='your_key',
@@ -243,7 +265,8 @@ async with Salamoonder(
     pass
 ```
 
-### Browser Impersonation  
+### Browser Impersonation
+
 ```python
 async with Salamoonder(
     api_key='your_key', 
@@ -254,6 +277,7 @@ async with Salamoonder(
 ```
 
 ### Proxy Support
+
 ```python
 # All methods support proxy parameter
 result = await client.akamai.fetch_and_extract(
@@ -288,7 +312,7 @@ async with Salamoonder(api_key='key') as client:
 async with Salamoonder(api_key='key') as client:
     task1 = await client.task.createTask(...)
     task2 = await client.task.createTask(...)
-    
+  
     # Wait for both results concurrently
     results = await asyncio.gather(
         client.task.getTaskResult(task1),
@@ -303,6 +327,7 @@ MIT - See [LICENSE](LICENSE) file for details
 ## Support
 
 For issues, feature requests, or questions, please visit:
+
 - **Website**: [salamoonder.com](https://salamoonder.com)
 - **Documentation**: [salamoonder.com/docs](https://apidocs.salamoonder.com)
 - **Support**: [support@salamoonder.com](mailto:support@salamoonder.com)

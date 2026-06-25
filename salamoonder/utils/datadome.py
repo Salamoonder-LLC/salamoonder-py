@@ -15,7 +15,7 @@ class Datadome:
         client: Initialized Client instance
         
     Example:
-        >>> datadome = DataDomeUtils(client)
+        >>> datadome = Datadome(client)
         >>> result = await datadome.get_slider_challenge(
         ...     html=str,
         ...     datadome_cookie=str,

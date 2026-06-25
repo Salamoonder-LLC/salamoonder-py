@@ -32,8 +32,8 @@ class Tasks:
             - IncapsulaUTMVCSolver: Requires website
             - AkamaiWebSensorSolver: Requires url, abck, bmsz, script, sensor_url, count, data
             - AkamaiSBSDSolver: Requires url, cookie, sbsd_url, script
-            - DataDomeSliderSolver: Requires captcha_url; optional user_agent, country_code
-            - DataDomeInterstitialSolver: Requires captcha_url; optional user_agent, country_code
+            - DataDomeSliderSolver: Requires captcha_url, challenge_page, user_agent
+            - DataDomeInterstitialSolver: Requires captcha_url, challenge_page, user_agent
         Returns:
             str: Task ID for polling results
             
@@ -111,22 +111,14 @@ class Tasks:
                 task['user_agent'] = kwargs.get("user_agent")
 
         elif task_type == "DataDomeSliderSolver":
-            task["type"] = "DataDomeSliderSolver"
             task["captcha_url"] = kwargs.get("captcha_url")
-
-            if "user_agent" in kwargs:
-                task['user_agent'] = kwargs.get("user_agent")
-
-            task["country_code"] = kwargs.get("country_code")
+            task["challenge_page"] = kwargs.get("challenge_page")
+            task["user_agent"] = kwargs.get("user_agent")
 
         elif task_type == "DataDomeInterstitialSolver":
-            task["type"] = "DataDomeInterstitialSolver"
             task["captcha_url"] = kwargs.get("captcha_url")
-            
-            if "user_agent" in kwargs:
-                task['user_agent'] = kwargs.get("user_agent")
-
-            task["country_code"] = kwargs.get("country_code")
+            task["challenge_page"] = kwargs.get("challenge_page")
+            task["user_agent"] = kwargs.get("user_agent")
 
         logger.info("Creating task of type: %s", task_type)
         data = await self.client._post(self.create_url, {"task": task})
